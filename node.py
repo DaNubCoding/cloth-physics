@@ -13,40 +13,47 @@ class Node:
     @staticmethod
     def update_wind() -> None:
         if Node.wind_timer.ended:
-            Node.wind = VEC(uniform(0.1, 0.5), uniform(-0.2, 0.2))
+            Node.wind = VEC(uniform(0.1, 0.5), uniform(-0.15, 0.15)) * 0.2 * 0
 
-    def __init__(self, pos: VEC, *connections: tuple[Self], root: bool = False) -> None:
+    def __init__(self, pos: VEC, *connections: tuple[Self]) -> None:
         self.instances.append(self)
-        self.root = root
         self.pos = VEC(pos)
-        self.vel = VEC(uniform(-0.01, 0.01), uniform(-0.01, 0.01))
-        self.connections = list(connections)
-        for node in connections:
-            node.add_connection(self)
+        self.prev_pos = self.pos + VEC(uniform(-0.01, 0.01), uniform(-0.01, 0.01))
+        self.connections = 0
+        self.picked = False
 
     def update(self, dt: float) -> None:
-        if self.root:
-            if pygame.mouse.get_pressed()[0] and self.pos.distance_to(pygame.mouse.get_pos()) < 30:
-                # self.pos += (VEC(pygame.mouse.get_pos()) - self.pos) * 0.05
-                self.pos = VEC(pygame.mouse.get_pos())
+        vel = self.pos - self.prev_pos
+        self.prev_pos = self.pos.copy()
+
+        if self.picked:
+            self.pos += (VEC(pygame.mouse.get_pos()) - self.pos) * 0.1
             return
 
-        self.vel.y += 0.5 * dt
-        wind_multiplier = len(self.connections) ** 2 * 0.15
-        self.vel -= self.wind * wind_multiplier * dt
-        self.vel *= 0.9 ** dt
-        self.pos += self.vel * dt
+        self.pos += vel * 0.995 # basically air resistance
+        self.pos.y += 0.1
+        wind_multiplier = self.connections * 0.5
+        self.pos += self.wind * wind_multiplier
 
-        for node in self.connections:
-            self.handle(dt, node)
+        self.handle_edge()
 
-    def handle(self, dt: float, other: Self) -> None:
-        self.vel += (other.pos + (self.pos - other.pos).normalize() * 20 - self.pos) * 0.2 * dt
-
-    def add_connection(self, node: Self) -> None:
-        self.connections.append(node)
+    def handle_edge(self) -> None:
+        if self.pos.x < 0:
+            self.pos.x = 0 - (self.pos.x - 0)
+            self.prev_pos.x = 0 - (self.prev_pos.x - 0)
+            self.pos.x -= (self.pos.x - self.prev_pos.x) * 0.2
+        elif self.pos.x > 800:
+            self.pos.x = 800 - (self.pos.x - 800)
+            self.prev_pos.x = 800 - (self.prev_pos.x - 800)
+            self.pos.x -= (self.pos.x - self.prev_pos.x) * 0.2
+        if self.pos.y < 0:
+            self.pos.y = 0 - (self.pos.y - 0)
+            self.prev_pos.y = 0 - (self.prev_pos.y - 0)
+            self.pos.y -= (self.pos.y - self.prev_pos.y) * 0.2
+        elif self.pos.y > 800:
+            self.pos.y = 800 - (self.pos.y - 800)
+            self.prev_pos.y = 800 - (self.prev_pos.y - 800)
+            self.pos.y -= (self.pos.y - self.prev_pos.y) * 0.2
 
     def draw(self, screen: pygame.Surface) -> None:
-        for node in self.connections:
-            pygame.draw.line(screen, (255, 255, 255), self.pos, node.pos)
-        pygame.draw.circle(screen, (255, 0, 0), self.pos, 3)
+        pygame.draw.circle(screen, (255, 255, 255), self.pos, 2)

@@ -1,4 +1,5 @@
 from pygame.locals import *
+from stick import Stick
 from vector import VEC
 from node import Node
 import pygame
@@ -9,56 +10,32 @@ pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 
-n1 = Node((200, 200), root=True)
-n2 = Node((200, 200), n1)
-n3 = Node((200, 200), n2, n1)
-n4 = Node((200, 200), n2)
-n5 = Node((200, 200), n2, n3, n4)
-n6 = Node((200, 200), n3, n5)
-n7 = Node((200, 200), n4, n5)
-n8 = Node((200, 200), n5, n6, n7)
-n9 = Node((200, 200), n7, n8)
-
-n1 = Node((100, 100), root=True)
-
-n2 = Node((90, 120), n1)
-n3 = Node((110, 120), n2, n1)
-
-n4 = Node((80, 140), n2)
-n5 = Node((100, 140), n2, n3, n4)
-n6 = Node((120, 140), n3, n5)
-
-n7 = Node((70, 160), n4)
-n8 = Node((90, 160), n4, n5, n7)
-n9 = Node((110, 160), n5, n6, n8)
-n10 = Node((130, 160), n6, n9)
-
-n11 = Node((80, 180), n7, n8)
-n12 = Node((100, 180), n8, n9, n11)
-n13 = Node((120, 180), n9, n10, n12)
-
-n14 = Node((90, 180), n11, n12)
-n15 = Node((110, 180), n12, n13, n14)
-
-n16 = Node((100, 200), n14, n15)
-
-# grid = []
-# for y in range(7):
-#     grid.append([])
-#     for x in range(7):
-#         grid[y].append(Node((50 + x * 10, 50 + y * 10)))
-#         if y > 0: grid[y][x].add_connection(grid[y - 1][x])
-#         if x > 0: grid[y][x].add_connection(grid[y][x - 1])
-#         if x > 0 and y > 0: grid[y][x].add_connection(grid[y - 1][x - 1])
-# grid[0][0].root = True
-
-# grid = []
-# for y in range(5):
-#     grid.append([])
-#     for x in range(5):
-#         grid[y].append(Node((100 + 20 * x, 100 + 20 * y), root = y == 0))
-#         if y != 0: grid[y][x].add_connection(grid[y - 1][x])
-#         if x != 0: grid[y][x].add_connection(grid[y][x - 1])
+n1 = Node((250, 250))
+n2 = Node((240, 260))
+n3 = Node((260, 260))
+n4 = Node((230, 270))
+n5 = Node((250, 270))
+n6 = Node((270, 270))
+n7 = Node((240, 280))
+n8 = Node((260, 280))
+n9 = Node((250, 290))
+Stick(n1, n2, 20)
+Stick(n2, n3, 20)
+Stick(n1, n3, 20)
+Stick(n2, n4, 20)
+Stick(n2, n5, 20)
+Stick(n4, n5, 20)
+Stick(n3, n5, 20)
+Stick(n3, n6, 20)
+Stick(n5, n6, 20)
+Stick(n4, n7, 20)
+Stick(n5, n7, 20)
+Stick(n5, n8, 20)
+Stick(n6, n8, 20)
+Stick(n7, n8, 20)
+Stick(n7, n9, 20)
+Stick(n8, n9, 20)
+Node((500, 500))
 
 running = True
 while running:
@@ -68,6 +45,18 @@ while running:
     for event in pygame.event.get():
         if event.type == QUIT:
             running = False
+        if event.type == MOUSEBUTTONDOWN:
+            min_dist = float("inf")
+            min_node = None
+            mpos = VEC(pygame.mouse.get_pos())
+            for node in Node.instances:
+                if (dist := node.pos.distance_to(mpos)) < min_dist:
+                    min_dist = dist
+                    min_node = node
+            min_node.picked = True
+        if event.type == MOUSEBUTTONUP:
+            for node in Node.instances:
+                node.picked = False
 
     screen.fill((0, 0, 0))
 
@@ -75,7 +64,15 @@ while running:
 
     for node in Node.instances:
         node.update(dt)
+
+    for stick in Stick.instances:
+        stick.update(dt)
+
+    for node in Node.instances:
         node.draw(screen)
+
+    for stick in Stick.instances:
+        stick.draw(screen)
 
     pygame.display.flip()
 
