@@ -15,7 +15,7 @@ class Node:
         if Node.wind_timer.ended:
             Node.wind = VEC(uniform(0.1, 0.5), uniform(-0.15, 0.15)) * 0.2 * 0
 
-    def __init__(self, pos: VEC, *connections: tuple[Self]) -> None:
+    def __init__(self, pos: VEC) -> None:
         self.instances.append(self)
         self.pos = VEC(pos)
         self.prev_pos = self.pos + VEC(uniform(-0.01, 0.01), uniform(-0.01, 0.01))
@@ -27,7 +27,7 @@ class Node:
         self.prev_pos = self.pos.copy()
 
         if self.picked:
-            self.pos += (VEC(pygame.mouse.get_pos()) - self.pos) * 0.1
+            self.pos += (VEC(pygame.mouse.get_pos()) - self.pos) * 0.6
             return
 
         self.pos += vel * 0.995 # basically air resistance
@@ -41,19 +41,19 @@ class Node:
         if self.pos.x < 0:
             self.pos.x = 0 - (self.pos.x - 0)
             self.prev_pos.x = 0 - (self.prev_pos.x - 0)
-            self.pos.x -= (self.pos.x - self.prev_pos.x) * 0.2
+            self.pos.x -= (self.pos.x - self.prev_pos.x) * 1
         elif self.pos.x > 800:
             self.pos.x = 800 - (self.pos.x - 800)
             self.prev_pos.x = 800 - (self.prev_pos.x - 800)
-            self.pos.x -= (self.pos.x - self.prev_pos.x) * 0.2
+            self.pos.x -= (self.pos.x - self.prev_pos.x) * 1
         if self.pos.y < 0:
             self.pos.y = 0 - (self.pos.y - 0)
             self.prev_pos.y = 0 - (self.prev_pos.y - 0)
-            self.pos.y -= (self.pos.y - self.prev_pos.y) * 0.2
+            self.pos.y -= (self.pos.y - self.prev_pos.y) * 1
         elif self.pos.y > 800:
             self.pos.y = 800 - (self.pos.y - 800)
             self.prev_pos.y = 800 - (self.prev_pos.y - 800)
-            self.pos.y -= (self.pos.y - self.prev_pos.y) * 0.2
+            self.pos.y -= (self.pos.y - self.prev_pos.y) * 1
 
     def draw(self, screen: pygame.Surface) -> None:
         pygame.draw.circle(screen, (255, 255, 255), self.pos, 2)

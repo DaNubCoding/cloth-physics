@@ -19,8 +19,8 @@ class Stick:
         dist = self.node1.pos.distance_to(self.node2.pos)
         perc = (1 - self.length / dist) * 0.5
         disp = (self.node2.pos - self.node1.pos) * perc
-        self.node1.pos += disp * 0.15
-        self.node2.pos -= disp * 0.15
+        self.node1.pos += disp * 0.4
+        self.node2.pos -= disp * 0.4
 
     def draw(self, screen: pygame.Surface) -> None:
         pygame.draw.line(screen, (255, 255, 255), self.node1.pos, self.node2.pos)
