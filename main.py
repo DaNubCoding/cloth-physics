@@ -1,17 +1,16 @@
 from pygame.locals import *
 from stick import Stick
+from constants import *
 from vector import VEC
 from node import Node
 from math import *
 import pygame
 
-WIDTH, HEIGHT = 800, 800
-
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 
-def square(width: int, height: int, space: int) -> None:
+def rectangle(width: int, height: int, space: int) -> None:
     nodes = []
     for y in range(height):
         nodes.append([])
@@ -22,7 +21,7 @@ def square(width: int, height: int, space: int) -> None:
             if x > 0 and y > 0: Stick(nodes[y][x], nodes[y - 1][x - 1], space * sqrt(2))
             if x < width - 1 and y > 0: Stick(nodes[y][x], nodes[y - 1][x + 1], space * sqrt(2))
 
-square(25, 10, 12)
+rectangle(24, 16, 10)
 
 running = True
 while running:
@@ -55,8 +54,8 @@ while running:
     for stick in Stick.instances:
         stick.update(dt)
 
-    for node in Node.instances:
-        node.draw(screen)
+    # for node in Node.instances:
+    #     node.draw(screen)
 
     for stick in Stick.instances:
         stick.draw(screen)
