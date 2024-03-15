@@ -42,18 +42,22 @@ class Node:
             self.pos.x = 0 - (self.pos.x - 0)
             self.prev_pos.x = 0 - (self.prev_pos.x - 0)
             self.prev_pos.x -= (self.prev_pos.x - self.pos.x) * 1 # Bounciness factor (1 is 100% energy absorption)
+            self.prev_pos.y -= (self.prev_pos.y - self.pos.y) * 0.3 # Wall & ground friction factor
         elif self.pos.x > 800:
             self.pos.x = 800 - (self.pos.x - 800)
             self.prev_pos.x = 800 - (self.prev_pos.x - 800)
             self.prev_pos.x -= (self.prev_pos.x - self.pos.x) * 1
+            self.prev_pos.y -= (self.prev_pos.y - self.pos.y) * 0.3
         if self.pos.y < 0:
             self.pos.y = 0 - (self.pos.y - 0)
             self.prev_pos.y = 0 - (self.prev_pos.y - 0)
             self.prev_pos.y -= (self.prev_pos.y - self.pos.y) * 1
+            self.prev_pos.x -= (self.prev_pos.x - self.pos.x) * 0.3
         elif self.pos.y > 800:
             self.pos.y = 800 - (self.pos.y - 800)
             self.prev_pos.y = 800 - (self.prev_pos.y - 800)
             self.prev_pos.y -= (self.prev_pos.y - self.pos.y) * 1
+            self.prev_pos.x -= (self.prev_pos.x - self.pos.x) * 0.3
 
     def draw(self, screen: pygame.Surface) -> None:
         pygame.draw.circle(screen, (255, 255, 255), self.pos, 2)
