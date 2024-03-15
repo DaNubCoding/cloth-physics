@@ -11,8 +11,7 @@ pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 
-space = 9
-def square(width: int, height: int) -> None:
+def square(width: int, height: int, space: int) -> None:
     nodes = []
     for y in range(height):
         nodes.append([])
@@ -23,33 +22,7 @@ def square(width: int, height: int) -> None:
             if x > 0 and y > 0: Stick(nodes[y][x], nodes[y - 1][x - 1], space * sqrt(2))
             if x < width - 1 and y > 0: Stick(nodes[y][x], nodes[y - 1][x + 1], space * sqrt(2))
 
-square(25, 10)
-
-# n1 = Node((250, 250))
-# n2 = Node((240, 260))
-# n3 = Node((260, 260))
-# n4 = Node((230, 270))
-# n5 = Node((250, 270))
-# n6 = Node((270, 270))
-# n7 = Node((240, 280))
-# n8 = Node((260, 280))
-# n9 = Node((250, 290))
-# Stick(n1, n2, 20)
-# Stick(n2, n3, 20)
-# Stick(n1, n3, 20)
-# Stick(n2, n4, 20)
-# Stick(n2, n5, 20)
-# Stick(n4, n5, 20)
-# Stick(n3, n5, 20)
-# Stick(n3, n6, 20)
-# Stick(n5, n6, 20)
-# Stick(n4, n7, 20)
-# Stick(n5, n7, 20)
-# Stick(n5, n8, 20)
-# Stick(n6, n8, 20)
-# Stick(n7, n8, 20)
-# Stick(n7, n9, 20)
-# Stick(n8, n9, 20)
+square(25, 10, 12)
 
 running = True
 while running:
