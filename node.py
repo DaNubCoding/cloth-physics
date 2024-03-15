@@ -31,7 +31,7 @@ class Node:
             return
 
         self.pos += vel * 0.995 # basically air resistance
-        self.pos.y += 0.1
+        self.pos.y += 0.1 # gravity
         wind_multiplier = self.connections * 0.5
         self.pos += self.wind * wind_multiplier
 
@@ -41,19 +41,19 @@ class Node:
         if self.pos.x < 0:
             self.pos.x = 0 - (self.pos.x - 0)
             self.prev_pos.x = 0 - (self.prev_pos.x - 0)
-            self.pos.x -= (self.pos.x - self.prev_pos.x) * 1
+            self.prev_pos.x -= (self.prev_pos.x - self.pos.x) * 1 # Bounciness factor (1 is 100% energy absorption)
         elif self.pos.x > 800:
             self.pos.x = 800 - (self.pos.x - 800)
             self.prev_pos.x = 800 - (self.prev_pos.x - 800)
-            self.pos.x -= (self.pos.x - self.prev_pos.x) * 1
+            self.prev_pos.x -= (self.prev_pos.x - self.pos.x) * 1
         if self.pos.y < 0:
             self.pos.y = 0 - (self.pos.y - 0)
             self.prev_pos.y = 0 - (self.prev_pos.y - 0)
-            self.pos.y -= (self.pos.y - self.prev_pos.y) * 1
+            self.prev_pos.y -= (self.prev_pos.y - self.pos.y) * 1
         elif self.pos.y > 800:
             self.pos.y = 800 - (self.pos.y - 800)
             self.prev_pos.y = 800 - (self.prev_pos.y - 800)
-            self.pos.y -= (self.pos.y - self.prev_pos.y) * 1
+            self.prev_pos.y -= (self.prev_pos.y - self.pos.y) * 1
 
     def draw(self, screen: pygame.Surface) -> None:
         pygame.draw.circle(screen, (255, 255, 255), self.pos, 2)
